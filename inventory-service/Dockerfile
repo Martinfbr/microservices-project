@@ -1,14 +1,9 @@
-# Imagen base de Java 17 con Alpine
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:17-jdk
 
-# Directorio de trabajo en el contenedor
 WORKDIR /app
 
-# Copiar el JAR generado por Gradle
-COPY build/libs/inventory-service-0.0.1-SNAPSHOT.jar app.jar
+COPY build/libs/inventory-service-*.jar app.jar
 
-# Exponer el puerto del servicio
 EXPOSE 8082
 
-# Comando de ejecución
 ENTRYPOINT ["java", "-jar", "app.jar"]

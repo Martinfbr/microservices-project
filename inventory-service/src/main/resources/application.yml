@@ -3,44 +3,21 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/inventorydb
+    url: jdbc:postgresql://inventory-db:5432/inventory
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
-  cloud:
-    compatibility-verifier:
-      enabled: false
   jpa:
-    properties:
-      hibernate:
-        format_sql: true
     hibernate:
       ddl-auto: update
-  logging:
-    level:
-    com.example.product: DEBUG
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
-logging:
-  level:
-    org.springframework.web: INFO
-    com.example.product: DEBUG
-
-springdoc:
-  api-docs:
-    path: /v3/api-docs
-  swagger-ui:
-    path: /swagger-ui.html
-
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health, info
-  endpoint:
-    health:
-      show-details: always
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
 
 product-service:
-  url: http://localhost:8081/api/v1/products
+  url: http://product-service:8081/api/v1/products
+
+springdoc:
+  api-docs.path: /v3/api-docs
+  swagger-ui.path: /swagger-ui.html

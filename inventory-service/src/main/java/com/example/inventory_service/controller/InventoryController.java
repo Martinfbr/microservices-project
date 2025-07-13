@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/v1/inventory")
 @Tag(name = "Inventario", description = "Operaciones del microservicio de inventario")
@@ -48,5 +50,13 @@ public class InventoryController {
             @Valid @RequestBody InventoryUpdateRequest request) {
         logger.info("Actualizando inventario para producto ID {}: {}", productId, request);
         return inventoryService.updateStock(productId, request);
+    }
+
+    @Operation(summary = "Consultar todos los productos del inventario")
+    @ApiResponse(responseCode = "200", description = "Lista de productos del inventario")
+    @GetMapping
+    public List<InventoryResponse> getAllInventory() {
+        logger.info("Consultando todo el inventario");
+        return inventoryService.getAllInventory();
     }
 }

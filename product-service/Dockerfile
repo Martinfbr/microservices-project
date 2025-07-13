@@ -1,14 +1,14 @@
-# Imagen base de Java 17 con Alpine
-FROM eclipse-temurin:17-jdk-alpine
+# Usa una imagen base oficial de Java + Gradle o Maven
+FROM eclipse-temurin:17-jdk
 
-# Directorio de trabajo en el contenedor
+# Crea directorio de trabajo dentro del contenedor
 WORKDIR /app
 
-# Copiar el JAR generado por Gradle
-COPY build/libs/product-service-0.0.1-SNAPSHOT.jar app.jar
+# Copia el build de tu app (suponiendo que ya has generado el JAR con ./gradlew bootJar)
+COPY build/libs/product-service-*.jar app.jar
 
-# Exponer el puerto
-EXPOSE 8080
+# Expone el puerto 8081 dentro del contenedor
+EXPOSE 8081
 
-# Comando de ejecución
+# Comando para ejecutar la aplicación
 ENTRYPOINT ["java", "-jar", "app.jar"]
