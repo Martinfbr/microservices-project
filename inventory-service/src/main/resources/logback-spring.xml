@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="10 seconds">
+
+    <!-- Variables Spring -->
+    <springProperty scope="context" name="APP_NAME" source="spring.application.name"/>
+
+    <!-- Definimos un patrón clásico para consola -->
+    <property name="CONSOLE_LOG_PATTERN"
+              value="%d{yyyy-MM-dd HH:mm:ss} %-5level [%thread] %logger{36} - %msg%n"/>
+
+    <!-- Para logs en archivo -->
+    <property name="LOG_FILE" value="logs/${APP_NAME}.log"/>
+    <property name="LOG_FILE_PATTERN" value="logs/${APP_NAME}-%d{yyyy-MM-dd}.log"/>
+
+    <!-- CONSOLE appender -->
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- ROLLING FILE appender -->
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG_FILE}</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG_FILE_PATTERN}</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${CONSOLE_LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+
+    <!-- JSON appender para Logstash -->
+    <appender name="Logstash" class="net.logstash.logback.appender.LoggingEventCompositeJsonEncoder">
+        <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+            <providers>
+                <timestamp>
+                    <timeZone>UTC</timeZone>
+                </timestamp>
+                <pattern>
+                    <pattern>
+                        {
+                        "severity": "%level",
+                        "service": "${APP_NAME}",
+                        "thread": "%thread",
+                        "logger": "%logger",
+                        "message": "%message"
+                        }
+                    </pattern>
+                </pattern>
+            </providers>
+        </encoder>
+    </appender>
+
+    <!-- ROOT LOGGER -->
+    <root level="INFO">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="RollingFile"/>
+        <!-- Descomenta si usas ELK -->
+        <!-- <appender-ref ref="Logstash"/> -->
+    </root>
+
+</configuration>
