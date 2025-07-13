@@ -1,12 +1,14 @@
 package com.example.inventory_service.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
-
-import java.math.BigDecimal;
+import lombok.NoArgsConstructor;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ProductoDto {
     private Long id;
     private String nombre;
-    private BigDecimal precio;
+    private Double precio;
 }

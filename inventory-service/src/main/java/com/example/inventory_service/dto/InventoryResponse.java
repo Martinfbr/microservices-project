@@ -1,11 +1,9 @@
 package com.example.inventory_service.dto;
 
-import lombok.*;
+import lombok.Builder;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@Data
 @Builder
 public class InventoryResponse {
     private Long productoId;

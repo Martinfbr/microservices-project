@@ -7,6 +7,7 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 @EnableFeignClients(basePackages = "com.example.inventory_service.client")
 public class InventoryServiceApplication {
+
 	public static void main(String[] args) {
 		SpringApplication.run(InventoryServiceApplication.class, args);
 	}
