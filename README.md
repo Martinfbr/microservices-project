@@ -111,7 +111,7 @@ microservices-project/
 ```
 
 🧽 Diagrama de Arquitectura
-![Arquitectura](https://github.com/Martinfbr/microservices-project/blob/main/assets/DiagramaArquitectura.png)
+![Arquitectura](https://github.com/Martinfbr/microservices-project/blob/main/assets/Diagrama-Arquitectura.png)
 
 🧪 Pruebas Automatizadas → Resultados de Cobertura
 ![Inventory Service Coverage](https://github.com/Martinfbr/microservices-project/blob/main/assets/Pruebas-inventory-service.png)
@@ -127,4 +127,3 @@ microservices-project/
 - ➕ **Monitorización con Prometheus + Grafana**: Para métricas, trazabilidad y alertas.
 - ➕ **Configuración centralizada con Spring Cloud Config**: Manejo externo de propiedades por ambiente.
 - ➕ **Escalabilidad horizontal con Kubernetes**: Preparar los servicios para correr en un clúster orquestado.
-
