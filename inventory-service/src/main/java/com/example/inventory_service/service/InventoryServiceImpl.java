@@ -20,38 +20,59 @@ public class InventoryServiceImpl implements InventoryService {
     private final ProductClient productClient;
 
     @Override
-    public InventoryResponse getByProductId(Long productId) {
-        Inventory inventory = inventoryRepository.findByProductoId(productId)
+    public InventoryResponse getByProductId(Long productoId) {
+        Inventory inventory = inventoryRepository.findByProductoId(productoId)
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado en inventario"));
 
-        ProductoDto producto = obtenerProducto(productId);
+        ProductoDto producto = productClient.getProductoById(productoId);
+        if (producto == null) {
+            throw new RuntimeException("Producto no encontrado");
+        }
 
         return InventoryResponse.builder()
-                .productoId(inventory.getProductoId())
+                .productoId(producto.getId())
                 .productoNombre(producto.getNombre())
                 .cantidad(inventory.getCantidad())
                 .build();
     }
-
     @Override
     public InventoryResponse updateStock(Long productId, InventoryUpdateRequest request) {
-        // Consultar si existe el producto en el microservicio de productos
-        ProductoDto producto = obtenerProducto(productId);
+        // Validaciones iniciales
+        if (productId == null || productId <= 0) {
+            throw new IllegalArgumentException("El ID del producto no es válido");
+        }
+
+        if (request == null || request.getCantidad() == null || request.getCantidad() < 0) {
+            throw new IllegalArgumentException("La cantidad proporcionada no es válida");
+        }
+
+        // Consultar el producto
+        ProductoDto producto;
+        try {
+            producto = obtenerProducto(productId);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al consultar el producto: " + e.getMessage(), e);
+        }
 
         if (producto == null) {
             throw new RuntimeException("Producto no encontrado en product-service");
         }
 
-        // Buscar inventario localmente o crear uno nuevo si no existe
+        // Buscar o crear inventario
         Inventory inventory = inventoryRepository.findByProductoId(productId)
-                .orElse(Inventory.builder()
+                .orElseGet(() -> Inventory.builder()
                         .productoId(productId)
                         .cantidad(0)
                         .build());
 
-        // Actualizar la cantidad
+        // Actualizar y guardar
         inventory.setCantidad(request.getCantidad());
-        inventoryRepository.save(inventory);
+
+        try {
+            inventoryRepository.save(inventory);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al guardar el inventario: " + e.getMessage(), e);
+        }
 
         log.info("Producto consultado desde product-service: {}", producto);
         log.info("Evento: Inventario actualizado para producto ID {}. Nueva cantidad: {}", productId, inventory.getCantidad());
@@ -62,6 +83,7 @@ public class InventoryServiceImpl implements InventoryService {
                 .cantidad(inventory.getCantidad())
                 .build();
     }
+
 
 
     private ProductoDto obtenerProducto(Long productId) {

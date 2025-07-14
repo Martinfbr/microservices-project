@@ -8,5 +8,8 @@ import org.springframework.context.annotation.Import;
 @SpringBootTest
 class InventoryServiceApplicationTests {
 
-
+    @Test
+    void contextLoads() {
+        // Este test verifica que la aplicación Spring se puede levantar correctamente
+    }
 }
