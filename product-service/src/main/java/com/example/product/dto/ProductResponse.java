@@ -19,5 +19,5 @@ public class ProductResponse {
     private String nombre;
 
     @Schema(description = "Precio del producto", example = "999.99", type = "number", format = "double")
-    private Double precio;
+    private BigDecimal precio;
 }

@@ -19,7 +19,7 @@ public class ProductMapper {
         ProductResponse dto = new ProductResponse();
         dto.setId(product.getId());
         dto.setNombre(product.getNombre());
-        dto.setPrecio(product.getPrecio().doubleValue());
+        dto.setPrecio(product.getPrecio()); // corregido
         return dto;
     }
 }

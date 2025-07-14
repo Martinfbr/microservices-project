@@ -1,6 +1,5 @@
 package com.example.product.controller;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import com.example.product.dto.ProductRequest;
 import com.example.product.dto.ProductResponse;
 import com.example.product.service.ProductService;
@@ -10,9 +9,12 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -35,10 +37,11 @@ public class ProductController {
             @Valid @RequestBody
             @Parameter(description = "Datos del producto a crear")
             ProductRequest request) {
+        if (ObjectUtils.isEmpty(request)) {
+            throw new IllegalArgumentException("La solicitud del producto no puede estar vacía");
+        }
         logger.info("Solicitud para crear producto: {}", request);
-        ProductResponse response = productService.create(request);
-        logger.info("Producto creado con éxito: {}", response);
-        return response;
+        return productService.create(request);
     }
 
     @Operation(summary = "Obtener un producto por ID")
@@ -51,10 +54,11 @@ public class ProductController {
             @PathVariable
             @Parameter(description = "ID del producto a consultar")
             Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor que cero");
+        }
         logger.info("Buscando producto con ID: {}", id);
-        ProductResponse response = productService.getById(id);
-        logger.info("Producto encontrado: {}", response);
-        return response;
+        return productService.getById(id);
     }
 
     @Operation(summary = "Listar todos los productos con paginación")
@@ -64,10 +68,7 @@ public class ProductController {
             @Parameter(description = "Parámetros de paginación")
             Pageable pageable) {
         logger.info("Listando productos con paginación: {}", pageable);
-        Page<ProductResponse> result = productService.getAll(pageable);
-        logger.info("Productos encontrados: totalElements={}, totalPages={}",
-                result.getTotalElements(), result.getTotalPages());
-        return result;
+        return productService.getAll(pageable);
     }
 
     @Operation(summary = "Actualizar un producto por ID")
@@ -83,10 +84,14 @@ public class ProductController {
             @Valid @RequestBody
             @Parameter(description = "Datos actualizados del producto")
             ProductRequest request) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor que cero");
+        }
+        if (ObjectUtils.isEmpty(request)) {
+            throw new IllegalArgumentException("La solicitud de actualización no puede estar vacía");
+        }
         logger.info("Solicitud para actualizar producto con ID {}: {}", id, request);
-        ProductResponse response = productService.update(id, request);
-        logger.info("Producto actualizado con éxito: {}", response);
-        return response;
+        return productService.update(id, request);
     }
 
     @Operation(summary = "Eliminar un producto por ID")
@@ -99,8 +104,10 @@ public class ProductController {
             @PathVariable
             @Parameter(description = "ID del producto a eliminar")
             Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("El ID debe ser mayor que cero");
+        }
         logger.info("Solicitud para eliminar producto con ID: {}", id);
         productService.delete(id);
-        logger.info("Producto eliminado con éxito, ID: {}", id);
     }
 }

@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class ProductServiceImpl implements ProductService {
 
@@ -26,6 +28,11 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse create(ProductRequest request) {
+        if (request == null || request.getNombre() == null ||
+                request.getPrecio() == null || request.getPrecio().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Solicitud de creación de producto inválida");
+        }
+
         try {
             Product product = mapper.toEntity(request);
             Product saved = repository.save(product);
@@ -39,17 +46,26 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse getById(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID de producto inválido");
+        }
+
         Product product = repository.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Producto no encontrado con ID: {}", id);
                     return new ResourceNotFoundException("Producto no encontrado");
                 });
+
         logger.info("Producto recuperado: {}", product);
         return mapper.toResponse(product);
     }
 
     @Override
     public Page<ProductResponse> getAll(Pageable pageable) {
+        if (pageable == null) {
+            throw new IllegalArgumentException("El parámetro pageable no puede ser nulo");
+        }
+
         Page<Product> page = repository.findAll(pageable);
         logger.info("Productos recuperados: total={}, páginas={}", page.getTotalElements(), page.getTotalPages());
         return page.map(mapper::toResponse);
@@ -57,6 +73,12 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse update(Long id, ProductRequest updated) {
+        if (id == null || id <= 0 ||
+                updated == null || updated.getNombre() == null ||
+                updated.getPrecio() == null || updated.getPrecio().compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Datos de actualización inválidos");
+        }
+
         Product existing = repository.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Producto no encontrado para actualizar: ID={}", id);
@@ -73,6 +95,10 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public void delete(Long id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("ID inválido para eliminar producto");
+        }
+
         Product existing = repository.findById(id)
                 .orElseThrow(() -> {
                     logger.warn("Producto no encontrado para eliminar: ID={}", id);
