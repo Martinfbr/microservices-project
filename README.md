@@ -117,12 +117,14 @@ microservices-project/
 ![Inventory Service Coverage](https://github.com/Martinfbr/microservices-project/blob/main/assets/Pruebas-inventory-service.png)
 ![Product Service Coverage](https://github.com/Martinfbr/microservices-project/blob/main/assets/Pruebas-pruduct-service.png)
 
-🚀 Propuesta de mejoras y escalabilidad futura
 
-➕ Autenticación y Autorización: Agregar OAuth2 o JWT para proteger los endpoints.
-➕ Manejo de eventos con mensajería (RabbitMQ/Kafka): Publicar eventos cuando se actualiza el inventario o se crea un producto.
-➕ Circuit Breaker y Retry con Resilience4J: Mejor tolerancia a fallos en las llamadas entre microservicios.
-➕ API Gateway con Spring Cloud Gateway: Un único punto de entrada y gestión de rutas.
-➕ Monitorización con Prometheus + Grafana: Para métricas, trazabilidad y alertas.
-➕ Configuración centralizada con Spring Cloud Config: Manejo externo de propiedades por ambiente.
-➕ Escalabilidad horizontal con Kubernetes: Preparar los servicios para correr en un clúster orquestado.
+## 🚀 Propuesta de mejoras y escalabilidad futura
+
+- ➕ **Autenticación y Autorización**: Agregar OAuth2 o JWT para proteger los endpoints.
+- ➕ **Manejo de eventos con mensajería (RabbitMQ/Kafka)**: Publicar eventos cuando se actualiza el inventario o se crea un producto.
+- ➕ **Circuit Breaker y Retry con Resilience4J**: Mejor tolerancia a fallos en las llamadas entre microservicios.
+- ➕ **API Gateway con Spring Cloud Gateway**: Un único punto de entrada y gestión de rutas.
+- ➕ **Monitorización con Prometheus + Grafana**: Para métricas, trazabilidad y alertas.
+- ➕ **Configuración centralizada con Spring Cloud Config**: Manejo externo de propiedades por ambiente.
+- ➕ **Escalabilidad horizontal con Kubernetes**: Preparar los servicios para correr en un clúster orquestado.
+
