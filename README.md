@@ -1,92 +1,118 @@
 # 🧩 Microservices Project: Product & Inventory Service
 
-Este proyecto demuestra la arquitectura y comunicación entre dos microservicios implementados con Spring Boot, utilizando **Docker**, **OpenFeign**, **Spring Data JPA** y orquestados mediante **Docker Compose**.
+Este proyecto demuestra cómo diseñar y conectar microservicios utilizando Spring Boot, con comunicación vía HTTP REST utilizando **OpenFeign**, persistencia con **PostgreSQL**, pruebas automatizadas con **JUnit**, y despliegue local a través de **Docker Compose**.
 
 ---
 
 ## 📦 Microservicios
 
-### 🛒 Product Service
-- Gestión de productos.
-- Expone una API RESTful para crear y consultar productos.
+### 💒 Product Service
+
+- Gestiona el CRUD de productos.
 - Puerto por defecto: `8081`.
+- Expone endpoints para:
+  - Crear productos
+  - Consultar productos (por ID y paginación)
+  - Actualizar productos
+  - Eliminar productos
 
 ### 📦 Inventory Service
-- Gestión de stock por producto.
-- Se comunica con el Product Service mediante **OpenFeign**.
+
+- Administra el stock de productos.
 - Puerto por defecto: `8082`.
+- Se comunica con Product Service para obtener datos del producto por ID.
+- Expone endpoints para:
+  - Consultar el stock de un producto
+  - Actualizar el stock
+  - Listar todos los inventarios
 
 ---
 
 ## 🚀 Instalación y Ejecución
 
-### ⚙️ Requisitos
+### ⚙️ Requisitos Previos
 
 - Docker
 - Docker Compose
 - Git
+- Java 17
 
-### 🐳 Iniciar los servicios
+
+### 🔧 Clonar y Ejecutar
 
 ```bash
 git clone https://github.com/Martinfbr/microservices-project.git
 cd microservices-project
 docker-compose up --build
+```
+Esto lanzará ambos microservicios y sus respectivas bases de datos PostgreSQL.
 
 
-Esto ejecutará ambos servicios y una base de datos PostgreSQL para persistencia.
+### 🔍 Endpoints de prueba
 
-🔥 Verificación
-Product API: http://localhost:8081/api/v1/products
+| Servicio  | URL Swagger                                                                    | Puerto |
+| --------- | ------------------------------------------------------------------------------ | ------ |
+| Product   | [http://localhost:8081/swagger-ui.html](http://localhost:8081/swagger-ui.html) | 8081   |
+| Inventory | [http://localhost:8082/swagger-ui.html](http://localhost:8082/swagger-ui.html) | 8082   |
 
-Inventory API: http://localhost:8082/api/v1/inventory
+---
 
 Puedes usar Postman o Swagger para probar los endpoints.
 
-| Tecnología          | Uso                              |
-| ------------------- | -------------------------------- |
-| Spring Boot         | Base de los microservicios       |
-| Spring Data JPA     | Acceso a datos con PostgreSQL    |
-| OpenFeign           | Comunicación entre servicios     |
-| Docker              | Contenerización de servicios     |
-| Docker Compose      | Orquestación de microservicios   |
-| PostgreSQL          | Base de datos                    |
-| Swagger / SpringDoc | Documentación automática de APIs |
+
+## 🧪 Pruebas Automatizadas
+
+Se incluyen pruebas unitarias y de integración para asegurar la calidad del código:
+
+- ✅ Pruebas de `Service`, `Controller` y `Mapper`
+- ✅ Manejo de errores probado (excepciones personalizadas)
+- ✅ Alta cobertura con **JaCoCo** (> 90%)
+- ✅ Uso de **Testcontainers** para integración con PostgreSQL
+
+Generación de reporte Jacoco:
+
+```bash
+./gradlew clean test jacocoTestReport
+```
+
+Ruta del reporte HTML:\
+`build/reports/jacoco/test/html/index.html`
+## 🧐 Decisiones Técnicas
+
+| Decisión                                    | Justificación                                                                 |
+| ------------------------------------------- | ----------------------------------------------------------------------------- |
+| `OpenFeign` para comunicación               | Facilita la llamada HTTP REST entre microservicios sin mucha configuración    |
+| `Docker Compose`                            | Permite iniciar múltiples servicios y bases de datos fácilmente               |
+| `PostgreSQL`                                | Base de datos robusta y común en producción                                   |
+| `Testcontainers`                            | Pruebas de integración realistas usando PostgreSQL en contenedor              |
+| `SpringDoc / Swagger`                       | Documentación automática de APIs REST                                         |
+| Separación por capas                        | Controller → Service → Repository, manteniendo un código limpio y desacoplado |
+| Validaciones con Bean Validation (`@Valid`) | Se asegura que las entradas a la API estén correctamente estructuradas        |
+
+---
 
 
 
-🧠 Decisiones Técnicas
-Feign Client para desacoplar la comunicación entre servicios.
+## 📁 Estructura del Proyecto
 
-DockerCompose para ejecutar todos los servicios localmente con un solo comando.
-
-PostgreSQL como base de datos para ambientes productivos.
-
-Uso de perfiles dev y prod para permitir configuraciones distintas por entorno.
-
-Separación por capas: Controller, Service, Repository.
-
-
-🔍 Documentación de API
-Cada servicio incluye documentación Swagger:
-
-Product: http://localhost:8081/swagger-ui.html
-
-Inventory: http://localhost:8082/swagger-ui.html
-
-
-📁 Estructura del Proyecto
-
+```
 microservices-project/
 ├── docker-compose.yml
 ├── product-service/
 │   ├── Dockerfile
-│   └── src/
+│   ├── src/
+│   └── README.md
 ├── inventory-service/
 │   ├── Dockerfile
-│   └── src/
-└── README.md
+│   ├── src/
+│   └── README.md
+└── assets/
+    └── DiagramaArquitectura.png
+```
 
-## 🧭 Diagrama de Arquitectura
+🧽 Diagrama de Arquitectura
+![Arquitectura](https://github.com/Martinfbr/microservices-project/blob/main/assets/DiagramaArquitectura.png)
 
-![Diagrama de arquitectura](assets/DiagramaArquitectura.png)
+🧪 Pruebas Automatizadas → Resultados de Cobertura
+![Inventory Service Coverage](https://github.com/Martinfbr/microservices-project/blob/main/assets/Pruebas-inventory-service.png)
+![Product Service Coverage](https://github.com/Martinfbr/microservices-project/blob/main/assets/Pruebas-pruduct-service.png)
